@@ -1,13 +1,36 @@
-import React from "react";
+import React, { useContext } from "react";
 import classes from "./Cart.module.css";
 import Modal from "../UI/Modal";
+import CartContext from "../../store/cart-context";
 
 const Cart = (props) => {
+  const cartctx = useContext(CartContext);
+
+  const groupedItems = {};
+  cartctx.items.forEach((item) => {
+    
+    if (groupedItems[item.name]) {
+      groupedItems[item.name].quantity = +groupedItems[item.name].quantity + +item.quantity ;
+    } else {
+      groupedItems[item.name] = { ...item };
+    }
+  });
+
+  let totalprice = 0 ;
+  Object.keys(groupedItems).forEach(itemname => {
+    const item = groupedItems[itemname]
+    totalprice += item.price * item.quantity
+  })
+
   const cartItems = (
     <ul className={classes["cart-items"]}>
-      {[{ id: "c1", name: "sushi", amount: 2, price: 12.99 }].map((item) => (
-        <li>{item.name}</li>
-      ))}
+      {Object.keys(groupedItems).map(
+        (item) => (
+            <li key={item}>
+              Name : {item} Price : {groupedItems[item].price} quantity : {groupedItems[item].quantity}
+            </li>
+        )
+      )}
     </ul>
   );
 
@@ -16,10 +39,12 @@ const Cart = (props) => {
       {cartItems}
       <div className={classes.total}>
         <span>Total Amount</span>
-        <span>35.6</span>
+        <span>{totalprice.toFixed(2)}</span>
       </div>
       <div className={classes.actions}>
-        <button className={classes["button--alt"]} onClick={props.onCloseCart}>Close</button>
+        <button className={classes["button--alt"]} onClick={props.onCloseCart}>
+          Close
+        </button>
         <button className={classes.button}>Order</button>
       </div>
     </Modal>
@@ -27,7 +52,6 @@ const Cart = (props) => {
 };
 
 export default Cart;
-
 
 
 
