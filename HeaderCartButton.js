@@ -5,25 +5,29 @@ import CartContext from "../../store/cart-context";
 
 const HeaderCartButton = props => {
     const cartCtx = useContext(CartContext)
-    let quantity = 0
-    cartCtx.items.forEach(item => {
-         quantity = quantity + Number(item.quantity)
-    })
-
+    // let quantity = 0
+    // console.log('catctx.item is ',cartCtx.items )
+    // cartCtx.items.forEach(item => {
+    //     //console.log('item is ', item)
+    //      quantity = quantity + Number(item.quantity)
+    // })
+    // console.log(cartCtx.items)
     
-    // const numOfCartItems = cartCtx.items.reduce((curNum, item) => {
-    //     return curNum + item.amount 
-    // }, 0) ;
+    const numOfCartItems = cartCtx.items.reduce((curNum, item) => {
+        return curNum + item.amount 
+    }, 0) ;
 
-    return <button className={classes.button} onClick={props.onClick}>
+    return (
+      <button className={classes.button} onClick={props.onClick}>
         <span className={classes.icon}>
-            <CartIcon />
+          <CartIcon />
         </span>
         <span>Your Cart</span>
         <span className={classes.badge}>
-            {quantity}
+          {numOfCartItems}
         </span>
-    </button>
+      </button>
+    );
 }
 
 export default HeaderCartButton
